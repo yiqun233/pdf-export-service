@@ -74,11 +74,19 @@ class PdfExportService {
 
     try {
       logger.info('正在启动Puppeteer浏览器...');
-      this.browser = await puppeteer.launch({
+      const launchOptions = {
         headless: config.puppeteer.headless,
         args: config.puppeteer.args,
         protocolTimeout: config.puppeteer.protocolTimeout
-      });
+      };
+
+      // 如果配置了executablePath,则使用指定的Chrome
+      if (config.puppeteer.executablePath) {
+        launchOptions.executablePath = config.puppeteer.executablePath;
+        logger.info(`使用指定的Chrome路径: ${config.puppeteer.executablePath}`);
+      }
+
+      this.browser = await puppeteer.launch(launchOptions);
 
       // 重置计数器和时间
       this.requestCount = 0;

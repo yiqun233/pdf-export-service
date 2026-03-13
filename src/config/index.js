@@ -13,6 +13,8 @@ module.exports = {
     headless: process.env.PUPPETEER_HEADLESS !== 'false',
     timeout: parseInt(process.env.PUPPETEER_TIMEOUT) || 30000,
     protocolTimeout: parseInt(process.env.PUPPETEER_PROTOCOL_TIMEOUT) || 180000, // 协议超时时间(ms)
+    // Chrome可执行文件路径(优先使用环境变量配置)
+    executablePath: process.env.CHROME_EXECUTABLE_PATH || '/usr/bin/google-chrome',
     // 浏览器自动重启配置（双重保障机制）
     browserRestartInterval: parseInt(process.env.BROWSER_RESTART_INTERVAL) || 50, // 每50次请求重启
     browserRestartIntervalMs: parseInt(process.env.BROWSER_RESTART_INTERVAL_MS) || 6 * 60 * 60 * 1000, // 每6小时重启

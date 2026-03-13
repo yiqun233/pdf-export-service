@@ -43,19 +43,19 @@ RUN yarn install --frozen-lockfile --production
 
 # 复制项目文件
 COPY src ./src
-COPY ecosystem.config.js ./
 
 # 创建非 root 用户运行应用
-RUN groupadd -r pptruser && useradd -r -g pptruser pptruser
-RUN chown -R pptruser:pptruser /app
+RUN groupadd -r pptruser && useradd -r -g pptruser pptruser \
+    && chown -R pptruser:pptruser /app
+
 USER pptruser
 
-# 暴露端口（根据你的服务端口配置）
-EXPOSE 3000
+# 暴露端口
+EXPOSE 8098
 
 # 设置环境变量
 ENV NODE_ENV=production
-ENV PORT=3000
+ENV PORT=8098
 
 # 启动服务
 CMD ["node", "src/server.js"]

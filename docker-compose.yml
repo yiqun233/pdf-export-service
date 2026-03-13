@@ -9,26 +9,36 @@ services:
     container_name: dsai-pdf-export
     restart: unless-stopped
     ports:
-      - "3000:3000"
+      - "8098:8098"
     environment:
       - NODE_ENV=production
-      - PORT=3000
-      # 添加其他需要的环境变量
-      # - LOG_LEVEL=info
-    # 如果需要 .env 文件，取消下面的注释
-    # env_file:
-    #   - .env
+      - PORT=8098
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+      - PUPPETEER_HEADLESS=${PUPPETEER_HEADLESS:-true}
+      - PUPPETEER_TIMEOUT=${PUPPETEER_TIMEOUT:-60000}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    env_file:
+      - .env
     volumes:
-      # 持久化日志（可选）
+      # 持久化日志
       - ./logs:/app/logs
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/health"]
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8098/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
     # Puppeteer 需要增加共享内存
     shm_size: '2gb'
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
     # 安全相关配置
     security_opt:
       - seccomp:unconfined
